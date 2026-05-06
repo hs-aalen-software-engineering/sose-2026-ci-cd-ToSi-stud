@@ -1,7 +1,7 @@
+import dash.dcc as dcc
 import numpy as np
 import plotly.graph_objects as go
 from dash import Dash, Input, Output, html
-import dash.dcc as dcc
 
 from .geometry import find_intersection
 from .road import generate_road_profile
