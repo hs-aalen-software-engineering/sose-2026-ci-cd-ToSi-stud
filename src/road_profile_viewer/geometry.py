@@ -90,8 +90,12 @@ def find_intersection(
         for i in range(len(x_road) - 1):
             x1, x2 = x_road[i], x_road[i + 1]
             if x1 <= camera_x <= x2:
+                # x2 == x1 would mean two road points share the same x, which is
+                # invalid for a function-like profile; fall back to segment start.
                 t = (camera_x - x1) / (x2 - x1) if x2 != x1 else 0
                 y_road_at_camera = y_road[i] + t * (y_road[i + 1] - y_road[i])
+                # A downward ray only intersects the road when the camera is above it.
+                # If the camera is at or below the road surface there is no intersection.
                 if camera_y > y_road_at_camera:
                     distance = float(camera_y - y_road_at_camera)
                     return float(camera_x), float(y_road_at_camera), distance
