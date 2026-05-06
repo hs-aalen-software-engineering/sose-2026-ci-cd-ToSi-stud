@@ -1,7 +1,6 @@
-import dash.dcc as dcc
 import numpy as np
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, html
+from dash import Dash, Input, Output, dcc, html
 
 from .geometry import find_intersection
 from .road import generate_road_profile
@@ -35,7 +34,7 @@ def create_dash_app() -> Dash:
                     "Camera Ray Angle (degrees from horizontal):",
                     style={"fontWeight": "bold", "marginRight": "10px"},
                 ),
-                dcc.Input(  # pyright: ignore[reportPrivateImportUsage]
+                dcc.Input(
                     id="angle-input",
                     type="number",
                     value=-1.1,
@@ -57,7 +56,7 @@ def create_dash_app() -> Dash:
                 "padding": "10px",
             },
         ),
-        dcc.Graph(id="road-profile-graph", style={"height": "400px"}),  # pyright: ignore[reportPrivateImportUsage]
+        dcc.Graph(id="road-profile-graph", style={"height": "400px"}),
         html.Div(
             [
                 html.H3("Instructions:", style={"color": "#2c3e50"}),
@@ -68,7 +67,7 @@ def create_dash_app() -> Dash:
                     html.Li("The green point shows where the ray intersects the road"),
                     html.Li("Hover over the green point to see the distance from camera to intersection"),
                     html.Li("Adjust the angle to see how the intersection point changes"),
-                    html.Li("Negative angles point downward, positive angles point upward"),
+                    html.Li("Positive angles point downward, negative angles point upward"),
                 ]),
             ],
             style={
@@ -105,11 +104,13 @@ def create_dash_app() -> Dash:
         if angle is None:
             angle = -1.1
 
+        x_max = 80.0
+
         # Generate road profile
-        x_road, y_road = generate_road_profile(num_points=100, x_max=80)
+        x_road, y_road = generate_road_profile(num_points=100, x_max=x_max)
 
         # Camera position
-        camera_x, camera_y = 0, 2.0  # PEP8 Violation: Missing spaces after commas
+        camera_x, camera_y = 0, 2.0
 
         # Find intersection first to determine ray length
         x_intersect, y_intersect, distance = find_intersection(x_road, y_road, angle, camera_x, camera_y)
@@ -128,7 +129,7 @@ def create_dash_app() -> Dash:
                 y_ray = np.array([camera_y, camera_y - 10])
             else:
                 slope = np.tan(angle_rad)
-                x_end = min(camera_x + 20, 80)
+                x_end = min(camera_x + 20, x_max)
                 y_end = camera_y + slope * (x_end - camera_x)
                 x_ray = np.array([camera_x, x_end])
                 y_ray = np.array([camera_y, y_end])
@@ -160,7 +161,7 @@ def create_dash_app() -> Dash:
                     "size": 12,
                     "color": "red",
                     "symbol": "circle",
-                },  # PEP8 Violation: Missing spaces after commas
+                },
                 hovertemplate="Camera<br>Position: (%{x:.2f}, %{y:.2f})<extra></extra>",
             )
         )
@@ -215,7 +216,7 @@ def create_dash_app() -> Dash:
                 "borderwidth": 1,
             },
             plot_bgcolor="#f8f9fa",
-            xaxis={"gridcolor": "#dee2e6", "range": [-2, 82], "constrain": "domain"},
+            xaxis={"gridcolor": "#dee2e6", "range": [-2, x_max + 2], "constrain": "domain"},
             yaxis={
                 "gridcolor": "#dee2e6",
                 "scaleanchor": "x",

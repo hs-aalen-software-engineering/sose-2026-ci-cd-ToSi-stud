@@ -59,7 +59,7 @@ def find_intersection(
     y_road: NDArray[np.float64],
     angle_degrees: float,
     camera_x: float = 0,
-    camera_y: float = 1.5,
+    camera_y: float = 2.0,
 ) -> tuple[float | None, float | None, float | None]:
     """
     Find the intersection point between the camera ray and the road profile.
@@ -85,8 +85,16 @@ def find_intersection(
     """
     angle_rad = -np.deg2rad(angle_degrees)
 
-    # Handle vertical ray
+    # Handle vertical ray (angle ≈ 90°): ray travels straight down at x = camera_x
     if np.abs(np.cos(angle_rad)) < 1e-10:
+        for i in range(len(x_road) - 1):
+            x1, x2 = x_road[i], x_road[i + 1]
+            if x1 <= camera_x <= x2:
+                t = (camera_x - x1) / (x2 - x1) if x2 != x1 else 0
+                y_road_at_camera = y_road[i] + t * (y_road[i + 1] - y_road[i])
+                if camera_y > y_road_at_camera:
+                    distance = float(camera_y - y_road_at_camera)
+                    return float(camera_x), float(y_road_at_camera), distance
         return None, None, None
 
     slope = np.tan(angle_rad)
