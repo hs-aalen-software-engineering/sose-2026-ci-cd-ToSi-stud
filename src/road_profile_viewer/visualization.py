@@ -34,7 +34,7 @@ def create_dash_app() -> Dash:
                     "Camera Ray Angle (degrees from horizontal):",
                     style={"fontWeight": "bold", "marginRight": "10px"},
                 ),
-                dcc.Input(
+                dcc.Input(  # pyright: ignore[reportPrivateImportUsage]
                     id="angle-input",
                     type="number",
                     value=-1.1,
@@ -56,7 +56,7 @@ def create_dash_app() -> Dash:
                 "padding": "10px",
             },
         ),
-        dcc.Graph(id="road-profile-graph", style={"height": "400px"}),
+        dcc.Graph(id="road-profile-graph", style={"height": "400px"}),  # pyright: ignore[reportPrivateImportUsage]
         html.Div(
             [
                 html.H3("Instructions:", style={"color": "#2c3e50"}),
