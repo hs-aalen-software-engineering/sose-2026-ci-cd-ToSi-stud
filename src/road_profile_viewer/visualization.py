@@ -1,6 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, dcc, html
+from dash import Dash, Input, Output, html
+import dash.dcc as dcc
 
 from .geometry import find_intersection
 from .road import generate_road_profile
@@ -34,7 +35,7 @@ def create_dash_app() -> Dash:
                     "Camera Ray Angle (degrees from horizontal):",
                     style={"fontWeight": "bold", "marginRight": "10px"},
                 ),
-                dcc.Input( #pyright: ignore[reportUnusedVariable]
+                dcc.Input(  # pyright: ignore[reportPrivateImportUsage]
                     id="angle-input",
                     type="number",
                     value=-1.1,
@@ -56,7 +57,7 @@ def create_dash_app() -> Dash:
                 "padding": "10px",
             },
         ),
-        dcc.Graph(id="road-profile-graph", style={"height": "400px"}), #pyright: ignore[reportUnusedVariable]
+        dcc.Graph(id="road-profile-graph", style={"height": "400px"}),  # pyright: ignore[reportPrivateImportUsage]
         html.Div(
             [
                 html.H3("Instructions:", style={"color": "#2c3e50"}),
@@ -80,7 +81,7 @@ def create_dash_app() -> Dash:
     ])
 
     # Define the callback to update the graph
-    @app.callback( #pyright: ignore[]
+    @app.callback(  # pyright: ignore[reportUnknownMemberType]
         [
             Output("road-profile-graph", "figure"),
             Output("intersection-info", "children"),

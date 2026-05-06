@@ -25,7 +25,7 @@ def main() -> None:
     print("Starting Road Profile Viewer...")
     print("Open your browser and navigate to: http://127.0.0.1:8050/")
     print("Press Ctrl+C to stop the server.")
-    app.run(debug=True)
+    app.run(debug=True) # pyright: ignore[reportUnknownMemberType]
 
 
 if __name__ == "__main__":
